@@ -52,7 +52,7 @@ class TaxonsToCodesTransformer implements DataTransformerInterface
         return new ArrayCollection($this->taxonRepository->findBy(['code' => $value['taxons']]));
     }
 
-    /**
+        /**
      * {@inheritdoc}
      */
     public function reverseTransform($value)
@@ -61,20 +61,25 @@ class TaxonsToCodesTransformer implements DataTransformerInterface
             throw new UnexpectedTypeException($value, Collection::class);
         }
 
-        if ($value->isEmpty() || null === $value->get('taxons')) {
+        $taxons = $value->get('taxons');
+
+        // ensure not empty or null
+        if ($value->isEmpty() || null === $taxons) {
             return [];
         }
 
-        if (!is_array($value->get('taxons'))) {
-            throw new \InvalidArgumentException('"taxons" element of collection should be an array.');
+        // ensure taxons is traversable
+        if (!(is_array($taxons) || $taxons instanceof \Traversable)) {
+            throw new \InvalidArgumentException('"taxons" element of collection should be Traversable');
         }
 
-        $taxons = [];
+        // convert to array of taxon codes
+        $taxonCodes = [];
         /** @var TaxonInterface $taxon */
-        foreach ($value->get('taxons') as $taxon) {
-            $taxons[] = $taxon->getCode();
+        foreach ($taxons as $taxon) {
+            $taxonCodes[] = $taxon->getCode();
         }
 
-        return ['taxons' => $taxons];
+        return ['taxons' => $taxonCodes];
     }
 }
