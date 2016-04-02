@@ -41,7 +41,7 @@ class CouponsEligibilityChecker implements PromotionSubjectEligibilityCheckerInt
      */
     public function isEligible(PromotionSubjectInterface $subject, PromotionInterface $promotion)
     {
-        if (!$subject instanceof PromotionCouponAwareSubjectInterface) {
+        if (!$subject instanceof PromotionCouponAwareSubjectInterface || $subject->getPromotionCoupon() === null) {
             return false;
         }
 
