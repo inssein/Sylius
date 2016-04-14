@@ -55,6 +55,7 @@ sylius_cart:
         cart:
             classes:
                 model: %sylius.model.order.class%
+                repository: Sylius\Bundle\CartBundle\Doctrine\ORM\CartRepository
                 form:
                     default: Sylius\Bundle\CoreBundle\Form\Type\CartType
         cart_item:
